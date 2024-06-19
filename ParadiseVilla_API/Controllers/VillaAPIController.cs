@@ -1,20 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ParadiseVilla_API.Data;
 using ParadiseVilla_API.Models;
+using ParadiseVilla_API.Models.DTO;
 
 namespace ParadiseVilla_API.Controllers
 {
-    [Route("/api/[controller]")]
+    [Route("/api/VillaAPI")]
     [ApiController]
     public class VillaAPIController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<Villa> GetVillas()
+        public IEnumerable<VillaDTO> GetVillas()
         {
-            return new List<Villa>
-            {
-                new Villa { Id= 1, Name="Pool View"},
-                new Villa { Id= 2, Name="Beach View"}
-            };
+            return VillaStore.villaList;
+        }
+        [HttpGet("{id:int}")]
+        public VillaDTO GetVilla(int id)
+        {
+            return VillaStore.villaList.FirstOrDefault(x => x.Id == id);
         }
     }
 }
