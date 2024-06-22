@@ -15,7 +15,7 @@ namespace ParadiseVilla_API.Controllers
         {
             return VillaStore.villaList;
         }
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}",Name= "GetVilla")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -32,7 +32,7 @@ namespace ParadiseVilla_API.Controllers
                 return Ok(villaStore);
         }
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<VillaDTO> CreateVilla(VillaDTO villaDTO)
@@ -47,7 +47,8 @@ namespace ParadiseVilla_API.Controllers
             }
             villaDTO.Id = VillaStore.villaList.OrderByDescending(x => x.Id).FirstOrDefault().Id + 1;
             VillaStore.villaList.Add(villaDTO);
-            return Ok(villaDTO);
+            return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
+            //return Ok(villaDTO);
         }
     }
 }
