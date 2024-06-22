@@ -35,7 +35,7 @@ namespace ParadiseVilla_API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<VillaDTO> CreateVilla(VillaDTO villaDTO)
+        public ActionResult<VillaDTO> CreateVilla([FromBody]VillaDTO villaDTO)
         {
             if (villaDTO == null)
             {
