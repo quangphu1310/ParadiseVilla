@@ -41,6 +41,11 @@ namespace ParadiseVilla_API.Controllers
             {
                 return BadRequest();
             }
+            if (VillaStore.villaList.FirstOrDefault(x => x.Name.ToLower() == villaDTO.Name.ToLower()) != null)
+            {
+                ModelState.AddModelError("CustomError", "The Villa Already Exists!");
+                return BadRequest(ModelState);
+            }
             if(villaDTO.Id > 0)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
