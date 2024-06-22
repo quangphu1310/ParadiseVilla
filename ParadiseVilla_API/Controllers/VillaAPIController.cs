@@ -31,5 +31,23 @@ namespace ParadiseVilla_API.Controllers
             else 
                 return Ok(villaStore);
         }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<VillaDTO> CreateVilla(VillaDTO villaDTO)
+        {
+            if (villaDTO == null)
+            {
+                return BadRequest();
+            }
+            if(villaDTO.Id > 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            villaDTO.Id = VillaStore.villaList.OrderByDescending(x => x.Id).FirstOrDefault().Id + 1;
+            VillaStore.villaList.Add(villaDTO);
+            return Ok(villaDTO);
+        }
     }
 }
