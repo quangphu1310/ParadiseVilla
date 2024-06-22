@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using ParadiseVilla_API.Data;
 using ParadiseVilla_API.Models;
 using ParadiseVilla_API.Models.DTO;
@@ -76,7 +77,7 @@ namespace ParadiseVilla_API.Controllers
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateVilla(int id, [FromBody]VillaDTO villaDTO)
+        public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
         {
             if (villaDTO == null || id != villaDTO.Id)
             {
@@ -86,6 +87,28 @@ namespace ParadiseVilla_API.Controllers
             villaToUpdate.Name = villaDTO.Name;
             villaToUpdate.Occupancy = villaDTO.Occupancy;
             villaToUpdate.Sqft = villaDTO.Sqft;
+            return NoContent();
+        }
+        [HttpPatch("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaDTO> jsonPatch)
+        {
+            if (jsonPatch == null || id == 0)
+            {
+                return BadRequest();
+            }
+            var villaDTO = VillaStore.villaList.FirstOrDefault(x => x.Id == id);
+            if(villaDTO == null)
+            {
+                return NotFound();
+            }
+            jsonPatch.ApplyTo(villaDTO, ModelState);
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return NoContent();
         }
     }
