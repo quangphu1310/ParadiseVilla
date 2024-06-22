@@ -59,7 +59,7 @@ namespace ParadiseVilla_API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult DeleteVilla(int id)
+        public IActionResult DeleteVilla(int id)
         {
             if (id == 0)
             {
@@ -71,6 +71,21 @@ namespace ParadiseVilla_API.Controllers
                 return NotFound();
             }
             VillaStore.villaList.Remove(villaToDelete);
+            return NoContent();
+        }
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult UpdateVilla(int id, [FromBody]VillaDTO villaDTO)
+        {
+            if (villaDTO == null || id != villaDTO.Id)
+            {
+                return BadRequest();
+            }
+            var villaToUpdate = VillaStore.villaList.FirstOrDefault(x => x.Id == id);
+            villaToUpdate.Name = villaDTO.Name;
+            villaToUpdate.Occupancy = villaDTO.Occupancy;
+            villaToUpdate.Sqft = villaDTO.Sqft;
             return NoContent();
         }
     }
