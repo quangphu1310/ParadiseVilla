@@ -15,27 +15,27 @@ namespace ParadiseVilla_API.Controllers
         {
             return VillaStore.villaList;
         }
-        [HttpGet("{id:int}",Name= "GetVilla")]
+        [HttpGet("{id:int}", Name = "GetVilla")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<VillaDTO> GetVilla(int id)
         {
-            if(id == 0)
+            if (id == 0)
             {
                 return BadRequest();
             }
             var villaStore = VillaStore.villaList.FirstOrDefault(x => x.Id == id);
             if (villaStore == null)
                 return NotFound();
-            else 
+            else
                 return Ok(villaStore);
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<VillaDTO> CreateVilla([FromBody]VillaDTO villaDTO)
+        public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
         {
             if (villaDTO == null)
             {
@@ -46,7 +46,7 @@ namespace ParadiseVilla_API.Controllers
                 ModelState.AddModelError("CustomError", "The Villa Already Exists!");
                 return BadRequest(ModelState);
             }
-            if(villaDTO.Id > 0)
+            if (villaDTO.Id > 0)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -54,6 +54,24 @@ namespace ParadiseVilla_API.Controllers
             VillaStore.villaList.Add(villaDTO);
             return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
             //return Ok(villaDTO);
+        }
+        [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult DeleteVilla(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+            var villaToDelete = VillaStore.villaList.FirstOrDefault(x => x.Id == id);
+            if (villaToDelete == null)
+            {
+                return NotFound();
+            }
+            VillaStore.villaList.Remove(villaToDelete);
+            return NoContent();
         }
     }
 }
