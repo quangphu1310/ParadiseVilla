@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ParadiseVilla_API.Data;
 using ParadiseVilla_API.Models;
 using ParadiseVilla_API.Models.DTO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ParadiseVilla_API.Controllers
 {
@@ -10,11 +12,16 @@ namespace ParadiseVilla_API.Controllers
     [ApiController]
     public class VillaAPIController : ControllerBase
     {
+        private ApplicationDbContext _db;
+        public VillaAPIController(ApplicationDbContext db)
+        {
+            _db = db;
+        }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<VillaDTO>> GetVillas()
         {
-            return VillaStore.villaList;
+            return Ok(_db.Villas.ToList());
         }
         [HttpGet("{id:int}", Name = "GetVilla")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -26,7 +33,7 @@ namespace ParadiseVilla_API.Controllers
             {
                 return BadRequest();
             }
-            var villaStore = VillaStore.villaList.FirstOrDefault(x => x.Id == id);
+            var villaStore = _db.Villas.FirstOrDefault(x => x.Id == id);
             if (villaStore == null)
                 return NotFound();
             else
@@ -42,7 +49,7 @@ namespace ParadiseVilla_API.Controllers
             {
                 return BadRequest();
             }
-            if (VillaStore.villaList.FirstOrDefault(x => x.Name.ToLower() == villaDTO.Name.ToLower()) != null)
+            if (_db.Villas.FirstOrDefault(x => x.Name.ToLower() == villaDTO.Name.ToLower()) != null)
             {
                 ModelState.AddModelError("CustomError", "The Villa Already Exists!");
                 return BadRequest(ModelState);
@@ -51,8 +58,19 @@ namespace ParadiseVilla_API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            villaDTO.Id = VillaStore.villaList.OrderByDescending(x => x.Id).FirstOrDefault().Id + 1;
-            VillaStore.villaList.Add(villaDTO);
+            Villa villa = new Villa()
+            {
+                Amenity = villaDTO.Amenity,
+                Details = villaDTO.Details,
+                Id = villaDTO.Id,
+                ImageUrl = villaDTO.ImageUrl,
+                Name = villaDTO.Name,
+                Occupancy = villaDTO.Occupancy,
+                Rate = villaDTO.Rate,
+                Sqft = villaDTO.Sqft
+            };
+            _db.Villas.Add(villa);
+            _db.SaveChanges();
             return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
             //return Ok(villaDTO);
         }
@@ -66,12 +84,13 @@ namespace ParadiseVilla_API.Controllers
             {
                 return BadRequest();
             }
-            var villaToDelete = VillaStore.villaList.FirstOrDefault(x => x.Id == id);
+            var villaToDelete = _db.Villas.FirstOrDefault(x => x.Id == id);
             if (villaToDelete == null)
             {
                 return NotFound();
             }
-            VillaStore.villaList.Remove(villaToDelete);
+            _db.Villas.Remove(villaToDelete);
+            _db.SaveChanges();
             return NoContent();
         }
         [HttpPut("{id:int}")]
@@ -83,10 +102,17 @@ namespace ParadiseVilla_API.Controllers
             {
                 return BadRequest();
             }
-            var villaToUpdate = VillaStore.villaList.FirstOrDefault(x => x.Id == id);
+            var villaToUpdate = _db.Villas.FirstOrDefault(x => x.Id == id);
+            villaToUpdate.Amenity = villaDTO.Amenity;
+            villaToUpdate.Details = villaDTO.Details;
+            villaToUpdate.Id = villaDTO.Id;
+            villaToUpdate.ImageUrl = villaDTO.ImageUrl;
             villaToUpdate.Name = villaDTO.Name;
             villaToUpdate.Occupancy = villaDTO.Occupancy;
+            villaToUpdate.Rate = villaDTO.Rate;
             villaToUpdate.Sqft = villaDTO.Sqft;
+            _db.Villas.Update(villaToUpdate);
+            _db.SaveChanges();
             return NoContent();
         }
         [HttpPatch("{id:int}")]
@@ -99,13 +125,37 @@ namespace ParadiseVilla_API.Controllers
             {
                 return BadRequest();
             }
-            var villaDTO = VillaStore.villaList.FirstOrDefault(x => x.Id == id);
-            if(villaDTO == null)
+            var villa = _db.Villas.AsNoTracking().FirstOrDefault(x => x.Id == id);
+            if(villa == null)
             {
                 return NotFound();
             }
+            VillaDTO villaDTO = new VillaDTO
+            {
+                Amenity = villa.Amenity,
+                Details = villa.Details,
+                Id = villa.Id,
+                ImageUrl = villa.ImageUrl,
+                Name = villa.Name,
+                Occupancy = villa.Occupancy,
+                Rate = villa.Rate,
+                Sqft = villa.Sqft
+            };
             jsonPatch.ApplyTo(villaDTO, ModelState);
-            if(!ModelState.IsValid)
+            Villa model = new Villa()
+            {
+                Amenity = villaDTO.Amenity,
+                Details = villaDTO.Details,
+                Id = villaDTO.Id,
+                ImageUrl = villaDTO.ImageUrl,
+                Name = villaDTO.Name,
+                Occupancy = villaDTO.Occupancy,
+                Rate = villaDTO.Rate,
+                Sqft = villaDTO.Sqft
+            };
+            _db.Villas.Update(model);
+            _db.SaveChanges();
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
