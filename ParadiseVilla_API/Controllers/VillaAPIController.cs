@@ -43,7 +43,7 @@ namespace ParadiseVilla_API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
+        public ActionResult<VillaDTO> CreateVilla([FromBody] VillaCreateDTO villaDTO)
         {
             if (villaDTO == null)
             {
@@ -54,15 +54,10 @@ namespace ParadiseVilla_API.Controllers
                 ModelState.AddModelError("CustomError", "The Villa Already Exists!");
                 return BadRequest(ModelState);
             }
-            if (villaDTO.Id > 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
             Villa villa = new Villa()
             {
                 Amenity = villaDTO.Amenity,
                 Details = villaDTO.Details,
-                Id = villaDTO.Id,
                 ImageUrl = villaDTO.ImageUrl,
                 Name = villaDTO.Name,
                 Occupancy = villaDTO.Occupancy,
@@ -71,7 +66,7 @@ namespace ParadiseVilla_API.Controllers
             };
             _db.Villas.Add(villa);
             _db.SaveChanges();
-            return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
+            return CreatedAtRoute("GetVilla", new { id = villa.Id }, villaDTO);
             //return Ok(villaDTO);
         }
         [HttpDelete("{id:int}")]
@@ -96,7 +91,7 @@ namespace ParadiseVilla_API.Controllers
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
+        public IActionResult UpdateVilla(int id, [FromBody] VillaUpdateDTO villaDTO)
         {
             if (villaDTO == null || id != villaDTO.Id)
             {
@@ -119,7 +114,7 @@ namespace ParadiseVilla_API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaDTO> jsonPatch)
+        public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaUpdateDTO> jsonPatch)
         {
             if (jsonPatch == null || id == 0)
             {
@@ -130,7 +125,7 @@ namespace ParadiseVilla_API.Controllers
             {
                 return NotFound();
             }
-            VillaDTO villaDTO = new VillaDTO
+            VillaUpdateDTO villaDTO = new VillaUpdateDTO
             {
                 Amenity = villa.Amenity,
                 Details = villa.Details,
