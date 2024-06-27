@@ -12,13 +12,15 @@ namespace ParadiseVilla_API.Controllers
     public class VillaNumberAPIController : ControllerBase
     {
         private readonly IVillaNumberRepository _dbVillaNumber;
+        private readonly IVillaRepository _dbVilla;
         private readonly IMapper _mapper;
         protected APIResponse _response;
-        public VillaNumberAPIController(IVillaNumberRepository dbVillaNumber, IMapper mapper)
+        public VillaNumberAPIController(IVillaNumberRepository dbVillaNumber, IMapper mapper, IVillaRepository dbVilla)
         {
             _dbVillaNumber = dbVillaNumber;
             _mapper = mapper;
             _response = new APIResponse();
+            _dbVilla = dbVilla;
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -88,6 +90,11 @@ namespace ParadiseVilla_API.Controllers
                     ModelState.AddModelError("CustomError", "The Villa Number Already Exists!");
                     return BadRequest(ModelState);
                 }
+                if (await _dbVilla.GetAsync(x => x.Id == villaNumberCreateDTO.VillaID) == null)
+                {
+                    ModelState.AddModelError("CustomError", "The Villa Isn't Exists");
+                    return BadRequest(ModelState);
+                }
                 var villaNumber = _mapper.Map<VillaNumber>(villaNumberCreateDTO);
                 await _dbVillaNumber.CreateAsync(villaNumber);
                 _response.Result = _mapper.Map<VillaNumberDTO>(villaNumber);
@@ -145,6 +152,11 @@ namespace ParadiseVilla_API.Controllers
                     _response.IsSuccess = false;
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return BadRequest(_response);
+                }
+                if (await _dbVilla.GetAsync(x => x.Id == villaNumberUpdateDTO.VillaID) == null)
+                {
+                    ModelState.AddModelError("CustomError", "The Villa Isn't Exists");
+                    return BadRequest(ModelState);
                 }
                 VillaNumber villaNumber = _mapper.Map<VillaNumber>(villaNumberUpdateDTO);
                 await _dbVillaNumber.UpdateAsync(villaNumber);

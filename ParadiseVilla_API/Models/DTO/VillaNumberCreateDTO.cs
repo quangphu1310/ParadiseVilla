@@ -7,6 +7,8 @@ namespace ParadiseVilla_API.Models.DTO
     {
         [Required]
         public int VillaNo { get; set; }
+        [Required]
+        public int VillaID { get; set; }
         public string SpeacialDetails { get; set; }
     }
 }
