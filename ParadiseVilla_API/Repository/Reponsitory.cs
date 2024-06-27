@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ParadiseVilla_API.Data;
 using ParadiseVilla_API.Models;
+using ParadiseVilla_API.Repository.IRepository;
 using System.Linq.Expressions;
 
-namespace ParadiseVilla_API.Repository.IRepository
+namespace ParadiseVilla_API.Repository
 {
     public class Reponsitory<T> : IReponsitory<T> where T : class
     {
@@ -12,7 +13,7 @@ namespace ParadiseVilla_API.Repository.IRepository
         public Reponsitory(ApplicationDbContext db)
         {
             _db = db;
-            this.DbSet = _db.Set<T>();
+            DbSet = _db.Set<T>();
         }
         public async Task CreateAsync(T entity)
         {
