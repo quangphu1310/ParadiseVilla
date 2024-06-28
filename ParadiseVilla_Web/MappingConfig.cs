@@ -1,0 +1,18 @@
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using ParadiseVilla_Web.Models.DTO;
+
+namespace ParadiseVilla_Web
+{
+    public class MappingConfig : Profile
+    {
+        public MappingConfig()
+        {
+            CreateMap<VillaDTO, VillaCreateDTO>().ReverseMap();
+            CreateMap<VillaDTO, VillaUpdateDTO>().ReverseMap();
+
+            CreateMap<VillaNumberDTO, VillaNumberCreateDTO>().ReverseMap();
+            CreateMap<VillaNumberDTO, VillaNumberUpdateDTO>().ReverseMap();
+        }
+    }
+}
