@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParadiseVilla_API", "Paradi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParadiseVilla_Web", "ParadiseVilla_Web\ParadiseVilla_Web.csproj", "{E9F39CAB-92E7-4D1E-AAB4-64628F182E81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParadiseVilla_Utility", "ParadiseVilla_Utility\ParadiseVilla_Utility.csproj", "{6156B753-956F-462D-8CCF-3A428DE1B257}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E9F39CAB-92E7-4D1E-AAB4-64628F182E81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9F39CAB-92E7-4D1E-AAB4-64628F182E81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9F39CAB-92E7-4D1E-AAB4-64628F182E81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6156B753-956F-462D-8CCF-3A428DE1B257}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6156B753-956F-462D-8CCF-3A428DE1B257}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6156B753-956F-462D-8CCF-3A428DE1B257}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6156B753-956F-462D-8CCF-3A428DE1B257}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

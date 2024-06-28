@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ParadiseVilla_Utility\ParadiseVilla_Utility.csproj" />
+  </ItemGroup>
+
 </Project>
