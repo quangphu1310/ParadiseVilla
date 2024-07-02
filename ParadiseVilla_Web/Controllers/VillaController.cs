@@ -21,13 +21,14 @@ namespace ParadiseVilla_Web.Controllers
         {
             List<VillaDTO> list = new();
             var response = await _villaService.GetAllAsync<APIResponse>();
-            if(response != null && response.IsSuccess)
+            if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result));
             }
             return View(list);
         }
-        public IActionResult CreateVilla() {
+        public IActionResult CreateVilla()
+        {
             return View();
         }
         [HttpPost]
@@ -47,7 +48,7 @@ namespace ParadiseVilla_Web.Controllers
         public async Task<IActionResult> UpdateVilla(int id)
         {
             var response = await _villaService.GetAsync<APIResponse>(id);
-            if(response != null && response.IsSuccess)
+            if (response != null && response.IsSuccess)
             {
                 VillaDTO villaDTO = JsonConvert.DeserializeObject<VillaDTO>(Convert.ToString(response.Result));
                 return View(_mapper.Map<VillaUpdateDTO>(villaDTO));
@@ -65,6 +66,26 @@ namespace ParadiseVilla_Web.Controllers
                 {
                     return RedirectToAction(nameof(Index));
                 }
+            }
+            return View(model);
+        }
+        public async Task<IActionResult> DeleteVilla(int id)
+        {
+            VillaDTO villaDTO = null;
+            var response = await _villaService.GetAsync<APIResponse>(id);
+            if (response != null && response.IsSuccess)
+            {
+                villaDTO = JsonConvert.DeserializeObject<VillaDTO>(Convert.ToString(response.Result));
+            }
+            return View(villaDTO);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteVilla(VillaDTO model)
+        {
+            var response = await _villaService.DeleteAsync<APIResponse>(model.Id);
+            if (response != null && response.IsSuccess)
+            {
+                return RedirectToAction(nameof(Index));
             }
             return View(model);
         }
