@@ -44,5 +44,29 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View(model);
         }
+        public async Task<IActionResult> UpdateVilla(int id)
+        {
+            var response = await _villaService.GetAsync<APIResponse>(id);
+            if(response != null && response.IsSuccess)
+            {
+                VillaDTO villaDTO = JsonConvert.DeserializeObject<VillaDTO>(Convert.ToString(response.Result));
+                return View(_mapper.Map<VillaUpdateDTO>(villaDTO));
+            }
+            return NotFound();
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateVilla(VillaUpdateDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var response = await _villaService.UpdateAsync<APIResponse>(model);
+                if (response != null && response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            return View(model);
+        }
     }
 }
