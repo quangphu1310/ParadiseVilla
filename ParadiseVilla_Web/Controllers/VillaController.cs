@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using ParadiseVilla_Web.Models;
 using ParadiseVilla_Web.Models.DTO;
 using ParadiseVilla_Web.Services.IServices;
+using System.Reflection;
 
 namespace ParadiseVilla_Web.Controllers
 {
@@ -25,6 +26,23 @@ namespace ParadiseVilla_Web.Controllers
                 list = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result));
             }
             return View(list);
+        }
+        public IActionResult CreateVilla() {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateVilla(VillaCreateDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var response = await _villaService.CreateAsync<APIResponse>(model);
+                if (response != null && response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            return View(model);
         }
     }
 }
