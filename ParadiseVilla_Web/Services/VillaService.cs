@@ -12,7 +12,7 @@ namespace ParadiseVilla_Web.Services
         public VillaService(IHttpClientFactory httpClient, IConfiguration configuration) : base(httpClient)
         {
             _httpClientFactory = httpClient;
-            villaUrl = configuration.GetValue<string>("ServiceUrls: VillaAPI");
+            villaUrl = configuration.GetValue<string>("ServiceUrls:VillaAPI");
         }
 
         public async Task<T> CreateAsync<T>(VillaCreateDTO obj)
