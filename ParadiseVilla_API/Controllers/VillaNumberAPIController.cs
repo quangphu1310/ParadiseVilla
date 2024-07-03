@@ -28,7 +28,7 @@ namespace ParadiseVilla_API.Controllers
         {
             try
             {
-                var listObj = await _dbVillaNumber.GetAllAsync();
+                var listObj = await _dbVillaNumber.GetAllAsync(includeProperties:"Villa");
                 _response.Result = _mapper.Map<List<VillaNumberDTO>>(listObj);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);

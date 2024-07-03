@@ -1,4 +1,4 @@
-﻿@model IEnumerable<VillaDTO>
+﻿@model IEnumerable<VillaNumberDTO>
 <br />
 <div class="container p-4 border">
     <div class="row pb-2">
@@ -12,26 +12,24 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Occupany</th>
-                <th>Price</th>
+                <th>Villa Name</th>
+                <th>Villa Number</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach(var item in Model)
+            @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Occupancy</td>
-                    <td>@item.Rate.ToString("c")</td>
+                    <td>@item.Villa.Name</td>
+                    <td>@item.VillaNo</td>
                     <td>
-                        <a asp-controller="Villa" asp-action="UpdateVilla" asp-route-id="@item.Id" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
-                        <a asp-controller="Villa" asp-action="DeleteVilla" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                        <a asp-action="UpdateVillNumber" asp-route-id="@item.VillaNo" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
+                        <a asp-action="DeleteVillaNumber" asp-route-id="@item.VillaNo" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
                     </td>
                 </tr>
             }
-            
+
         </tbody>
     </table>
 </div>

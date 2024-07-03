@@ -10,5 +10,7 @@ namespace ParadiseVilla_Web.Models.DTO
         [Required]
         public int VillaID { get; set; }
         public string SpeacialDetails { get; set; }
+        public VillaDTO Villa { get; set; }
+
     }
 }

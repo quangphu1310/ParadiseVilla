@@ -15,7 +15,6 @@ namespace ParadiseVilla_Web.Services
         {
             reponseModel = new APIResponse();
             this.httpClient = httpClient;
-
         }
 
         public async Task<T> SendAsync<T>(APIRequest apiRequest)
