@@ -40,6 +40,7 @@ namespace ParadiseVilla_Web.Controllers
                 var response = await _villaService.CreateAsync<APIResponse>(model);
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] = $"Create Villa successfully!";
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -64,6 +65,7 @@ namespace ParadiseVilla_Web.Controllers
                 var response = await _villaService.UpdateAsync<APIResponse>(model);
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] = $"Update Villa successfully!";
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -85,6 +87,7 @@ namespace ParadiseVilla_Web.Controllers
             var response = await _villaService.DeleteAsync<APIResponse>(model.Id);
             if (response != null && response.IsSuccess)
             {
+                TempData["success"] = $"Delete Villa successfully!";
                 return RedirectToAction(nameof(Index));
             }
             return View(model);

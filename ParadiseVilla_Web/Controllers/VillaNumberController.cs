@@ -51,7 +51,10 @@ namespace ParadiseVilla_Web.Controllers
             {
                 var response = await _villaNumberService.CreateAsync<APIResponse>(villaNumber.VillaNumberCreateDTO);
                 if (response != null && response.IsSuccess)
+                {
+                    TempData["success"] = $"Create {villaNumber.VillaNumberCreateDTO.VillaNo} successfully!";
                     return RedirectToAction(nameof(Index));
+                }
                 else
                 {
                     if (response.Errors.Count > 0)
@@ -97,7 +100,10 @@ namespace ParadiseVilla_Web.Controllers
             {
                 var response = await _villaNumberService.UpdateAsync<APIResponse>(villaNumber.VillaNumberUpdateDTO);
                 if (response != null && response.IsSuccess)
+                {
+                    TempData["success"] = $"Update {villaNumber.VillaNumberUpdateDTO.VillaNo} successfully!";
                     return RedirectToAction(nameof(Index));
+                }
             }
             return View();
         }
@@ -126,7 +132,11 @@ namespace ParadiseVilla_Web.Controllers
             {
                 var response = await _villaNumberService.DeleteAsync<APIResponse>(villaNumber.VillaNumberDTO.VillaNo);
                 if (response != null && response.IsSuccess)
+                {
+                    TempData["success"] = $"Delete {villaNumber.VillaNumberDTO.VillaNo} successfully!";
                     return RedirectToAction(nameof(Index));
+
+                }
             }
             return View();
         }
