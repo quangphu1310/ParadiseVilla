@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ParadiseVilla_Web.Models.DTO
@@ -10,6 +11,7 @@ namespace ParadiseVilla_Web.Models.DTO
         [Required]
         public int VillaID { get; set; }
         public string SpeacialDetails { get; set; }
+        [ValidateNever]
         public VillaDTO Villa { get; set; }
 
     }

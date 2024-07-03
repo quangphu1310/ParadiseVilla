@@ -101,5 +101,34 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View();
         }
+        public async Task<IActionResult> Delete(int id)
+        {
+            VillaNumberDeleteVM villaNumberVM = new();
+            var response = await _villaService.GetAllAsync<APIResponse>();
+            var responseVillaNumber = await _villaNumberService.GetAsync<APIResponse>(id);
+            if (response != null && response.IsSuccess && responseVillaNumber != null)
+            {
+                villaNumberVM.VillaList = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result))
+                    .Select(i => new SelectListItem
+                    {
+                        Text = i.Name,
+                        Value = i.Id.ToString()
+                    });
+                var villaNumber = JsonConvert.DeserializeObject<VillaNumberDTO>(Convert.ToString(responseVillaNumber.Result));
+                villaNumberVM.VillaNumberDTO = _mapper.Map<VillaNumberDTO>(villaNumber);
+            }
+            return View(villaNumberVM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(VillaNumberDeleteVM villaNumber)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _villaNumberService.DeleteAsync<APIResponse>(villaNumber.VillaNumberDTO.VillaNo);
+                if (response != null && response.IsSuccess)
+                    return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
     }
 }
