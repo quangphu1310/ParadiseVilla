@@ -52,8 +52,25 @@ namespace ParadiseVilla_Web.Controllers
                 var response = await _villaNumberService.CreateAsync<APIResponse>(villaNumber.VillaNumberCreateDTO);
                 if (response != null && response.IsSuccess)
                     return RedirectToAction(nameof(Index));
+                else
+                {
+                    if (response.Errors.Count > 0)
+                    {
+                        ModelState.AddModelError("ErrorsMessage", response.Errors.FirstOrDefault());
+                    }
+                }
             }
-            return RedirectToAction("Create");
+            var resp = await _villaService.GetAllAsync<APIResponse>();
+            if (resp != null && resp.IsSuccess)
+            {
+                villaNumber.VillaList = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(resp.Result))
+                    .Select(i => new SelectListItem
+                    {
+                        Text = i.Name,
+                        Value = i.Id.ToString()
+                    });
+            }
+            return View(villaNumber);
         }
         public async Task<IActionResult> Update(int id)
         {
