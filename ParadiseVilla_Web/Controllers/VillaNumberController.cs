@@ -53,7 +53,7 @@ namespace ParadiseVilla_Web.Controllers
                 if (response != null && response.IsSuccess)
                     return RedirectToAction(nameof(Index));
             }
-            return View();
+            return RedirectToAction("Create");
         }
         public async Task<IActionResult> Update(int id)
         {

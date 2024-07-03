@@ -88,7 +88,7 @@ namespace ParadiseVilla_API.Controllers
                 }
                 if (await _dbVilla.GetAsync(x => x.Name.ToLower() == villaDTO.Name.ToLower()) != null)
                 {
-                    ModelState.AddModelError("CustomError", "The Villa Already Exists!");
+                    ModelState.AddModelError("Errors", "The Villa Already Exists!");
                     return BadRequest(ModelState);
                 }
                 Villa villa = _mapper.Map<Villa>(villaDTO);

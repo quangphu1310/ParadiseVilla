@@ -6,6 +6,10 @@ namespace ParadiseVilla_Web.Models.ViewModel
 {
     public class VillaNumberCreateVM
     {
+        public VillaNumberCreateVM()
+        {
+            VillaNumberCreateDTO = new VillaNumberCreateDTO();
+        }
         public VillaNumberCreateDTO VillaNumberCreateDTO {  get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> VillaList {  get; set; } 

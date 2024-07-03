@@ -87,12 +87,14 @@ namespace ParadiseVilla_API.Controllers
                 }
                 if (await _dbVillaNumber.GetAsync(x => x.VillaNo == villaNumberCreateDTO.VillaNo) != null)
                 {
-                    ModelState.AddModelError("CustomError", "The Villa Number Already Exists!");
+                    ModelState.AddModelError("Errors", "The Villa Number Already Exists!");
+                    _response.IsSuccess = false;
                     return BadRequest(ModelState);
                 }
                 if (await _dbVilla.GetAsync(x => x.Id == villaNumberCreateDTO.VillaID) == null)
                 {
-                    ModelState.AddModelError("CustomError", "The Villa Isn't Exists");
+                    ModelState.AddModelError("Errors", "The Villa Isn't Exists");
+                    _response.IsSuccess = false;
                     return BadRequest(ModelState);
                 }
                 var villaNumber = _mapper.Map<VillaNumber>(villaNumberCreateDTO);
@@ -155,7 +157,8 @@ namespace ParadiseVilla_API.Controllers
                 }
                 if (await _dbVilla.GetAsync(x => x.Id == villaNumberUpdateDTO.VillaID) == null)
                 {
-                    ModelState.AddModelError("CustomError", "The Villa Isn't Exists");
+                    ModelState.AddModelError("Errors", "The Villa Isn't Exists");
+                    _response.IsSuccess = false;
                     return BadRequest(ModelState);
                 }
                 VillaNumber villaNumber = _mapper.Map<VillaNumber>(villaNumberUpdateDTO);
