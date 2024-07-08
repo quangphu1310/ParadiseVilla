@@ -12,8 +12,8 @@ using ParadiseVilla_API.Data;
 namespace ParadiseVilla_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240704143001_AddLocalUserTable")]
-    partial class AddLocalUserTable
+    [Migration("20240708154240_AddAllTable")]
+    partial class AddAllTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,8 +27,11 @@ namespace ParadiseVilla_API.Migrations
 
             modelBuilder.Entity("ParadiseVilla_API.Models.LocalUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -99,7 +102,7 @@ namespace ParadiseVilla_API.Migrations
                         {
                             Id = 1,
                             Amenity = "",
-                            CreatedDate = new DateTime(2024, 7, 4, 21, 29, 59, 748, DateTimeKind.Local).AddTicks(9345),
+                            CreatedDate = new DateTime(2024, 7, 8, 22, 42, 40, 518, DateTimeKind.Local).AddTicks(7965),
                             Details = "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.",
                             ImageUrl = "https://dotnetmasteryimages.blob.core.windows.net/bluevillaimages/villa3.jpg",
                             Name = "Royal Villa",
@@ -112,7 +115,7 @@ namespace ParadiseVilla_API.Migrations
                         {
                             Id = 2,
                             Amenity = "",
-                            CreatedDate = new DateTime(2024, 7, 4, 21, 29, 59, 748, DateTimeKind.Local).AddTicks(9358),
+                            CreatedDate = new DateTime(2024, 7, 8, 22, 42, 40, 518, DateTimeKind.Local).AddTicks(7977),
                             Details = "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.",
                             ImageUrl = "https://dotnetmasteryimages.blob.core.windows.net/bluevillaimages/villa1.jpg",
                             Name = "Premium Pool Villa",
@@ -125,7 +128,7 @@ namespace ParadiseVilla_API.Migrations
                         {
                             Id = 3,
                             Amenity = "",
-                            CreatedDate = new DateTime(2024, 7, 4, 21, 29, 59, 748, DateTimeKind.Local).AddTicks(9417),
+                            CreatedDate = new DateTime(2024, 7, 8, 22, 42, 40, 518, DateTimeKind.Local).AddTicks(7979),
                             Details = "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.",
                             ImageUrl = "https://dotnetmasteryimages.blob.core.windows.net/bluevillaimages/villa4.jpg",
                             Name = "Luxury Pool Villa",
@@ -138,7 +141,7 @@ namespace ParadiseVilla_API.Migrations
                         {
                             Id = 4,
                             Amenity = "",
-                            CreatedDate = new DateTime(2024, 7, 4, 21, 29, 59, 748, DateTimeKind.Local).AddTicks(9418),
+                            CreatedDate = new DateTime(2024, 7, 8, 22, 42, 40, 518, DateTimeKind.Local).AddTicks(7981),
                             Details = "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.",
                             ImageUrl = "https://dotnetmasteryimages.blob.core.windows.net/bluevillaimages/villa5.jpg",
                             Name = "Diamond Villa",
@@ -151,7 +154,7 @@ namespace ParadiseVilla_API.Migrations
                         {
                             Id = 5,
                             Amenity = "",
-                            CreatedDate = new DateTime(2024, 7, 4, 21, 29, 59, 748, DateTimeKind.Local).AddTicks(9420),
+                            CreatedDate = new DateTime(2024, 7, 8, 22, 42, 40, 518, DateTimeKind.Local).AddTicks(7982),
                             Details = "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.",
                             ImageUrl = "https://dotnetmasteryimages.blob.core.windows.net/bluevillaimages/villa2.jpg",
                             Name = "Diamond Pool Villa",
