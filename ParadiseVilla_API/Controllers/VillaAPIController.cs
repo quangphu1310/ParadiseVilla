@@ -27,6 +27,8 @@ namespace ParadiseVilla_API.Controllers
         }
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetVillas()
         {
@@ -46,6 +48,9 @@ namespace ParadiseVilla_API.Controllers
         }
         [HttpGet("{id:int}", Name = "GetVilla")]
         [Authorize(Roles = "admin")]
+
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -110,6 +115,8 @@ namespace ParadiseVilla_API.Controllers
         [HttpDelete("{id:int}")]
         [Authorize(Roles ="CUSTOM")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<APIResponse>> DeleteVilla(int id)
