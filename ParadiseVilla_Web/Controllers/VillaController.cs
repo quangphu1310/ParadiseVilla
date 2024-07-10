@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ParadiseVilla_Web.Models;
@@ -27,10 +28,12 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View(list);
         }
+        [Authorize(Roles = "admin")]
         public IActionResult CreateVilla()
         {
             return View();
         }
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> CreateVilla(VillaCreateDTO model)
         {
@@ -56,6 +59,7 @@ namespace ParadiseVilla_Web.Controllers
             }
             return NotFound();
         }
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> UpdateVilla(VillaUpdateDTO model)
         {
@@ -71,6 +75,8 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View(model);
         }
+        [Authorize(Roles = "admin")]
+
         public async Task<IActionResult> DeleteVilla(int id)
         {
             VillaDTO villaDTO = null;
@@ -81,6 +87,7 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View(villaDTO);
         }
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> DeleteVilla(VillaDTO model)
         {

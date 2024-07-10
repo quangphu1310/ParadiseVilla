@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -30,6 +31,8 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View(list);
         }
+        [Authorize(Roles = "admin")]
+
         public async Task<IActionResult> Create() {
             VillaNumberCreateVM villaNumberVM = new();
             var response = await _villaService.GetAllAsync<APIResponse>();
@@ -44,6 +47,7 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View(villaNumberVM);
         }
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Create(VillaNumberCreateVM villaNumber)
         {
@@ -75,6 +79,8 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View(villaNumber);
         }
+        [Authorize(Roles = "admin")]
+
         public async Task<IActionResult> Update(int id)
         {
             VillaNumberUpdateVM villaNumberVM = new();
@@ -93,6 +99,7 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View(villaNumberVM);
         }
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Update(VillaNumberUpdateVM villaNumber)
         {
@@ -107,6 +114,8 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View();
         }
+        [Authorize(Roles = "admin")]
+
         public async Task<IActionResult> Delete(int id)
         {
             VillaNumberDeleteVM villaNumberVM = new();
@@ -126,6 +135,8 @@ namespace ParadiseVilla_Web.Controllers
             return View(villaNumberVM);
         }
         [HttpPost]
+        [Authorize(Roles = "admin")]
+
         public async Task<IActionResult> Delete(VillaNumberDeleteVM villaNumber)
         {
             if (ModelState.IsValid)

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using ParadiseVilla_Web;
 using ParadiseVilla_Web.Services;
 using ParadiseVilla_Web.Services.IServices;
@@ -16,6 +17,23 @@ builder.Services.AddScoped<IVillaNumberService, VillaNumberService>();
 
 builder.Services.AddHttpClient<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(o =>
+    {
+        o.Cookie.HttpOnly = true;
+        o.LoginPath = "/User/login";
+        o.AccessDeniedPath = "/User/AccessDenied";
+        //o.LogoutPath = "/User/Logout";
+        o.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        o.SlidingExpiration = true;
+    });
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,7 +48,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
