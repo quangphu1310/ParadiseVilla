@@ -1,4 +1,5 @@
-﻿using ParadiseVilla_Utility;
+﻿using Newtonsoft.Json.Linq;
+using ParadiseVilla_Utility;
 using ParadiseVilla_Web.Models;
 using ParadiseVilla_Web.Models.DTO;
 using ParadiseVilla_Web.Services.IServices;
@@ -15,50 +16,55 @@ namespace ParadiseVilla_Web.Services
             villaUrl = configuration.GetValue<string>("ServiceUrls:VillaAPI");
         }
 
-        public async Task<T> CreateAsync<T>(VillaNumberCreateDTO obj)
+        public async Task<T> CreateAsync<T>(VillaNumberCreateDTO obj, string token)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = obj,
-                Url = villaUrl + "/api/VillaNumberAPI"
+                Url = villaUrl + "/api/VillaNumberAPI",
+                Token = token
             });
         }
 
-        public async Task<T> DeleteAsync<T>(int id)
+        public async Task<T> DeleteAsync<T>(int id, string token)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.DELETE,
-                Url = villaUrl + "/api/VillaNumberAPI/" + id
+                Url = villaUrl + "/api/VillaNumberAPI/" + id,
+                Token = token
             });
         }
 
-        public async Task<T> GetAllAsync<T>()
+        public async Task<T> GetAllAsync<T>(string token)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
-                Url = villaUrl + "/api/VillaNumberAPI/"
+                Url = villaUrl + "/api/VillaNumberAPI/",
+                Token = token
             });
         }
 
-        public async Task<T> GetAsync<T>(int id)
+        public async Task<T> GetAsync<T>(int id, string token)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
-                Url = villaUrl + "/api/VillaNumberAPI/" + id
+                Url = villaUrl + "/api/VillaNumberAPI/" + id,
+                Token = token
             }) ;
         }
 
-        public async Task<T> UpdateAsync<T>(VillaNumberUpdateDTO obj)
+        public async Task<T> UpdateAsync<T>(VillaNumberUpdateDTO obj, string token)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.PUT,
                 Url = villaUrl + "/api/VillaNumberAPI/" + obj.VillaNo,
-                Data = obj
+                Data = obj,
+                Token = token
             }) ;
         }
     }

@@ -3,6 +3,7 @@ using ParadiseVilla_Utility;
 using ParadiseVilla_Web.Models;
 using ParadiseVilla_Web.Services.IServices;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -43,6 +44,11 @@ namespace ParadiseVilla_Web.Services
                         break;
                     default: message.Method = HttpMethod.Get;
                         break;
+                }
+
+                if (!string.IsNullOrEmpty(apiRequest.Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiRequest.Token);
                 }
                 HttpResponseMessage apiResponse = null;
                 apiResponse = await client.SendAsync(message);

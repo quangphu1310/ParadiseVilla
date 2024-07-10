@@ -66,7 +66,8 @@ namespace ParadiseVilla_Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            HttpContext.Session.SetString(SD.SessionToken, "");
+            //HttpContext.Session.SetString(SD.SessionToken, "");
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
         public IActionResult AccessDenied()

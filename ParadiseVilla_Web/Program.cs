@@ -23,10 +23,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(o =>
     {
         o.Cookie.HttpOnly = true;
+        o.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         o.LoginPath = "/User/login";
         o.AccessDeniedPath = "/User/AccessDenied";
-        //o.LogoutPath = "/User/Logout";
-        o.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         o.SlidingExpiration = true;
     });
 builder.Services.AddSession(options => {
