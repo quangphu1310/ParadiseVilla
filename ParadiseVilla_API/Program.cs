@@ -86,6 +86,28 @@ builder.Services.AddSwaggerGen(o =>
             new List<string>()
         }
     });
+    o.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Paradise Villa V1",
+        Version = "v1.0",
+        Contact = new OpenApiContact
+        {
+            Email = "trancongquangphu10@gmail.com",
+            Name = "Tran Cong Quang Phu",
+            Url = new Uri("https://www.instagram.com/_tcqphus/"),
+        }
+    });
+    o.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Title = "Paradise Villa V2",
+        Version = "v2.0",
+        Contact = new OpenApiContact
+        {
+            Email = "trancongquangphu10@gmail.com",
+            Name = "Tran Cong Quang Phu",
+            Url = new Uri("https://www.instagram.com/_tcqphus/"),
+        }
+    });
 });
 var app = builder.Build();
 
@@ -93,7 +115,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(o =>
+    {
+        o.SwaggerEndpoint("/swagger/v1/swagger.json", "Paradise_Villa_V1");
+        o.SwaggerEndpoint("/swagger/v2/swagger.json", "Paradise_Villa_V2");
+    });
+    //app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
 
