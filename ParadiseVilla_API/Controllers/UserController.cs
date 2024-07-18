@@ -7,7 +7,7 @@ using System.Net;
 
 namespace ParadiseVilla_API.Controllers
 {
-    [Route("api/UserAuth")]
+    [Route("api/v{version:apiVersion}/UserAuth")]
     [ApiController]
     public class UserController : ControllerBase
     {
