@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ParadiseVilla_API.Models;
 using ParadiseVilla_API.Models.DTO;
@@ -9,6 +10,7 @@ namespace ParadiseVilla_API.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/UserAuth")]
     [ApiController]
+    [ApiVersionNeutral]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
