@@ -11,12 +11,11 @@ using ParadiseVilla_API.Repository.IRepository;
 using System.Net;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace ParadiseVilla_API.Controllers
+namespace ParadiseVilla_API.Controllers.v1
 {
     [Route("/api/v{version:apiVersion}/VillaAPI")]
     [ApiController]
     [ApiVersion("1.0")]
-    [ApiVersion("2.0")]
     public class VillaAPIController : ControllerBase
     {
         private readonly IVillaRepository _dbVilla;
@@ -28,14 +27,8 @@ namespace ParadiseVilla_API.Controllers
             _mapper = mapper;
             _response = new APIResponse();
         }
+        
         [HttpGet]
-        [MapToApiVersion("2.0")]
-        public IEnumerable<string> Get()
-        {
-            return (new string[] { "value1", "value2" });
-        }
-        [HttpGet]
-        [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]

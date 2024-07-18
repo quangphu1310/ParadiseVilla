@@ -5,7 +5,7 @@ using ParadiseVilla_API.Models.DTO;
 using ParadiseVilla_API.Repository.IRepository;
 using System.Net;
 
-namespace ParadiseVilla_API.Controllers
+namespace ParadiseVilla_API.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/UserAuth")]
     [ApiController]
