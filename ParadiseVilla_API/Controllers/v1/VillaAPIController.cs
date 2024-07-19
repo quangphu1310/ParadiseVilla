@@ -27,16 +27,24 @@ namespace ParadiseVilla_API.Controllers.v1
             _mapper = mapper;
             _response = new APIResponse();
         }
-        
+        [ResponseCache(CacheProfileName = "Default30")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetVillas()
+        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name ="FilterOccupancy")] int? occupancy)
         {
             try
             {
-                var villaList = await _dbVilla.GetAllAsync();
+                IEnumerable<Villa> villaList;
+                if(occupancy > 0)
+                {
+                    villaList = await _dbVilla.GetAllAsync(x =>x.Occupancy == occupancy);
+                }
+                else
+                {
+                    villaList = await _dbVilla.GetAllAsync();
+                }
                 _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);

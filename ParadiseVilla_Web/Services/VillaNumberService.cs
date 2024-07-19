@@ -22,7 +22,7 @@ namespace ParadiseVilla_Web.Services
             {
                 ApiType = SD.ApiType.POST,
                 Data = obj,
-                Url = villaUrl + "/api/VillaNumberAPI",
+                Url = villaUrl + "/api/v1/VillaNumberAPI",
                 Token = token
             });
         }
@@ -32,7 +32,7 @@ namespace ParadiseVilla_Web.Services
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.DELETE,
-                Url = villaUrl + "/api/VillaNumberAPI/" + id,
+                Url = villaUrl + "/api/v1/VillaNumberAPI/" + id,
                 Token = token
             });
         }
@@ -42,7 +42,7 @@ namespace ParadiseVilla_Web.Services
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
-                Url = villaUrl + "/api/VillaNumberAPI/",
+                Url = villaUrl + "/api/v1/VillaNumberAPI/",
                 Token = token
             });
         }
@@ -52,7 +52,7 @@ namespace ParadiseVilla_Web.Services
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
-                Url = villaUrl + "/api/VillaNumberAPI/" + id,
+                Url = villaUrl + "/api/v1/VillaNumberAPI/" + id,
                 Token = token
             }) ;
         }
@@ -62,7 +62,7 @@ namespace ParadiseVilla_Web.Services
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.PUT,
-                Url = villaUrl + "/api/VillaNumberAPI/" + obj.VillaNo,
+                Url = villaUrl + "/api/v1/VillaNumberAPI/" + obj.VillaNo,
                 Data = obj,
                 Token = token
             }) ;
