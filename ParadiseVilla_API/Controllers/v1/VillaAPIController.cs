@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ParadiseVilla_API.Data;
 using ParadiseVilla_API.Models;
 using ParadiseVilla_API.Models.DTO;
@@ -32,25 +33,29 @@ namespace ParadiseVilla_API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name ="FilterOccupancy")] int? occupancy
-            , [FromQuery] string? search)
+        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name = "FilterOccupancy")] int? occupancy
+            , [FromQuery] string? search, int pageSize = 0, int pageNumber = 1)
         {
             try
             {
                 IEnumerable<Villa> villaList;
-                if(occupancy > 0)
+                if (occupancy > 0)
                 {
-                    villaList = await _dbVilla.GetAllAsync(x =>x.Occupancy == occupancy);
+                    villaList = await _dbVilla.GetAllAsync(x => x.Occupancy == occupancy);
                 }
-
                 else
                 {
                     villaList = await _dbVilla.GetAllAsync();
                 }
-                if(!string.IsNullOrEmpty(search))
+                if (!string.IsNullOrEmpty(search))
                 {
-                    villaList = await _dbVilla.GetAllAsync(x=>x.Name.ToLower().Contains(search.ToLower()));
+                    villaList = await _dbVilla.GetAllAsync(x => x.Name.ToLower().Contains(search.ToLower()));
                 }
+
+                villaList = await _dbVilla.GetAllAsync(pageSize: pageSize, pageNumber: pageNumber);
+
+                Pagination pagination = new Pagination { PageNumber = pageNumber, PageSize = pageSize};
+                Response.Headers.Add("pagination", JsonConvert.SerializeObject(pagination));
                 _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
