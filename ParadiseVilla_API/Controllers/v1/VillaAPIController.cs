@@ -32,7 +32,8 @@ namespace ParadiseVilla_API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name ="FilterOccupancy")] int? occupancy)
+        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name ="FilterOccupancy")] int? occupancy
+            , [FromQuery] string? search)
         {
             try
             {
@@ -41,9 +42,14 @@ namespace ParadiseVilla_API.Controllers.v1
                 {
                     villaList = await _dbVilla.GetAllAsync(x =>x.Occupancy == occupancy);
                 }
+
                 else
                 {
                     villaList = await _dbVilla.GetAllAsync();
+                }
+                if(!string.IsNullOrEmpty(search))
+                {
+                    villaList = await _dbVilla.GetAllAsync(x=>x.Name.ToLower().Contains(search.ToLower()));
                 }
                 _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
                 _response.StatusCode = HttpStatusCode.OK;
