@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.Tokens;
 using ParadiseVilla_API.Data;
 using ParadiseVilla_API.Models;
@@ -15,15 +16,17 @@ namespace ParadiseVilla_API.Repository
     {
         private readonly ApplicationDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly string secretKey;
         public UserRepository(ApplicationDbContext db, IConfiguration configuration,
-            UserManager<ApplicationUser> userManager, IMapper mapper)
+            UserManager<ApplicationUser> userManager, IMapper mapper, RoleManager<IdentityRole> roleManager)
         {
             _db = db;
             _userManager = userManager;
+            _roleManager = roleManager;
             _mapper = mapper;
-            secretKey =configuration.GetValue<string>("ApiSettings:Secret");
+            secretKey = configuration.GetValue<string>("ApiSettings:Secret");
         }
         public bool IsUniqueUser(string username)
         {
@@ -82,12 +85,22 @@ namespace ParadiseVilla_API.Repository
             };
             try
             {
-                var result = await _userManager.CreateAsync(user);
+                var result = await _userManager.CreateAsync(user, registerationRequestDTO.Password);
                 if (result.Succeeded)
                 {
+                    if (!_roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole("admin"));
+                        await _roleManager.CreateAsync(new IdentityRole("customer"));
+                    }
+                    await _userManager.AddToRoleAsync(user, "admin");
                     var userToReturn = _db.ApplicationUsers
                         .FirstOrDefault(x => x.UserName == registerationRequestDTO.UserName);
                     return _mapper.Map<UserDTO>(userToReturn);
+                }
+                else
+                {
+                    var errors = result.Errors.Select(e => e.Description).ToList();
                 }
             }catch (Exception ex)
             {
