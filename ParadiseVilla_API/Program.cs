@@ -1,11 +1,13 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ParadiseVilla_API;
 using ParadiseVilla_API.Data;
+using ParadiseVilla_API.Models;
 using ParadiseVilla_API.Repository;
 using ParadiseVilla_API.Repository.IRepository;
 using System.Text;
@@ -51,6 +53,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddApiVersioning(o =>
 {

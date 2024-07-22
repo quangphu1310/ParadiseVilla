@@ -1,4 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using ParadiseVilla_API.Data;
 using ParadiseVilla_API.Models;
 using ParadiseVilla_API.Models.DTO;
@@ -12,24 +14,30 @@ namespace ParadiseVilla_API.Repository
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
         private readonly string secretKey;
-        public UserRepository(ApplicationDbContext db, IConfiguration configuration)
+        public UserRepository(ApplicationDbContext db, IConfiguration configuration,
+            UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _db = db;
+            _userManager = userManager;
+            _mapper = mapper;
             secretKey =configuration.GetValue<string>("ApiSettings:Secret");
         }
         public bool IsUniqueUser(string username)
         {
-            if (_db.LocalUsers.FirstOrDefault(x => x.UserName == username) != null) 
+            if (_db.ApplicationUsers.FirstOrDefault(x => x.UserName == username) != null) 
                 return false;
             return true;
         }
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
         {
-            var user = _db.LocalUsers.FirstOrDefault(x => x.UserName.ToLower() == loginRequestDTO.UserName.ToLower()
-            && x.Password == loginRequestDTO.Password);
-            if (user == null)
+            var user = _db.ApplicationUsers.FirstOrDefault(x => x.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
+            
+            var isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
+            if (user == null || !isValid)
             {
                 return new LoginResponseDTO()
                 {
@@ -41,13 +49,13 @@ namespace ParadiseVilla_API.Repository
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secretKey);
-
+            var roles = await _userManager.GetRolesAsync(user);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Role, user.Role)
+                    new Claim(ClaimTypes.Role, roles.FirstOrDefault())
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -57,7 +65,8 @@ namespace ParadiseVilla_API.Repository
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
             {
                 Token = tokenHandler.WriteToken(token),
-                User = user
+                User = _mapper.Map<UserDTO>(user),
+                Role = roles.FirstOrDefault()
             };
             return loginResponseDTO;
         }
