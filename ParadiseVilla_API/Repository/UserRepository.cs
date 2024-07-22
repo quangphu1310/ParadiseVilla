@@ -71,19 +71,29 @@ namespace ParadiseVilla_API.Repository
             return loginResponseDTO;
         }
 
-        public async Task<LocalUser> Register(RegisterationRequestDTO registerationRequestDTO)
+        public async Task<UserDTO> Register(RegisterationRequestDTO registerationRequestDTO)
         {
-            LocalUser localUser = new()
+            ApplicationUser user = new()
             {
                 UserName = registerationRequestDTO.UserName,
                 Name = registerationRequestDTO.Name,
-                Password = registerationRequestDTO.Password,
-                Role = registerationRequestDTO.Role
+                Email = registerationRequestDTO.UserName,
+                NormalizedEmail = registerationRequestDTO.UserName.ToUpper()
             };
-            _db.LocalUsers.Add(localUser);
-            await _db.SaveChangesAsync();
-            localUser.Password = "";
-            return localUser;
+            try
+            {
+                var result = await _userManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    var userToReturn = _db.ApplicationUsers
+                        .FirstOrDefault(x => x.UserName == registerationRequestDTO.UserName);
+                    return _mapper.Map<UserDTO>(userToReturn);
+                }
+            }catch (Exception ex)
+            {
+
+            }
+            return new UserDTO();
         }
     }
 }
