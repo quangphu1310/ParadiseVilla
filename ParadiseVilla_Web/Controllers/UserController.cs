@@ -8,6 +8,7 @@ using ParadiseVilla_Utility;
 using ParadiseVilla_Web.Models;
 using ParadiseVilla_Web.Models.DTO;
 using ParadiseVilla_Web.Services.IServices;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace ParadiseVilla_Web.Controllers
@@ -34,10 +35,13 @@ namespace ParadiseVilla_Web.Controllers
             if(response != null && response.IsSuccess)
             {
                 LoginResponseDTO login = JsonConvert.DeserializeObject<LoginResponseDTO>(Convert.ToString(response.Result));
+            //Lấy giá trị từ sub trong token
+                var handler = new JwtSecurityTokenHandler();
+                var jwt = handler.ReadJwtToken(login.Token);
 
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                identity.AddClaim(new Claim(ClaimTypes.Name, login.User.UserName));
-                identity.AddClaim(new Claim(ClaimTypes.Role, login.User.Role));
+                identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(x=>x.Type== "unique_name").Value));
+                identity.AddClaim(new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(x=>x.Type=="role").Value));
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 

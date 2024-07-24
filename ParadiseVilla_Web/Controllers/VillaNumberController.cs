@@ -33,7 +33,6 @@ namespace ParadiseVilla_Web.Controllers
             return View(list);
         }
         [Authorize(Roles = "admin")]
-
         public async Task<IActionResult> Create() {
             VillaNumberCreateVM villaNumberVM = new();
             var response = await _villaService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
