@@ -67,11 +67,21 @@ namespace ParadiseVilla_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterationRequestDTO obj)
         {
+            if (string.IsNullOrEmpty(obj.Role))
+            {
+                obj.Role = SD.Role_Customer;
+            }
             var response = await _authService.RegisterAsync<APIResponse>(obj);
             if(response != null && response.IsSuccess) 
             {
                 return RedirectToAction("Login");
             }
+            var RoleList = new List<SelectListItem>()
+            {
+                new SelectListItem{Text = SD.Role_Admin, Value = SD.Role_Admin},
+                new SelectListItem{Text=SD.Role_Customer, Value = SD.Role_Customer }
+            };
+            ViewBag.RoleList = RoleList;
             return View();
         }
         public async Task<IActionResult> Logout()
