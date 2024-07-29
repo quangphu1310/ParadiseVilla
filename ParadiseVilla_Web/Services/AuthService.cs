@@ -22,7 +22,7 @@ namespace ParadiseVilla_Web.Services
             {
                 ApiType = SD.ApiType.POST,
                 Data = loginRequest,
-                Url = villaUrl + "/api/v1/UserAuth/login"
+                Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/UserAuth/login"
             });
         }
 
@@ -32,7 +32,7 @@ namespace ParadiseVilla_Web.Services
             {
                 ApiType = SD.ApiType.POST,
                 Data = registeration,
-                Url = villaUrl + "/api/v1/UserAuth/register"
+                Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/UserAuth/register"
             });
         }
     }

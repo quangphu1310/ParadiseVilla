@@ -25,7 +25,7 @@ namespace ParadiseVilla_API.Data
                     Rate = 200,
                     Sqft = 550,
                     Amenity = "",
-                    CreatedDate = DateTime.Now
+                    CreatedDate = new DateTime(2024, 07, 29)
                 },
               new Villa
               {
@@ -37,7 +37,7 @@ namespace ParadiseVilla_API.Data
                   Rate = 300,
                   Sqft = 550,
                   Amenity = "",
-                  CreatedDate = DateTime.Now
+                  CreatedDate = new DateTime(2024, 07, 29)
               },
               new Villa
               {
@@ -49,7 +49,7 @@ namespace ParadiseVilla_API.Data
                   Rate = 400,
                   Sqft = 750,
                   Amenity = "",
-                  CreatedDate = DateTime.Now
+                  CreatedDate = new DateTime(2024, 07, 29)
               },
               new Villa
               {
@@ -61,7 +61,7 @@ namespace ParadiseVilla_API.Data
                   Rate = 550,
                   Sqft = 900,
                   Amenity = "",
-                  CreatedDate = DateTime.Now
+                  CreatedDate = new DateTime(2024, 07, 29)
               },
               new Villa
               {
@@ -73,7 +73,7 @@ namespace ParadiseVilla_API.Data
                   Rate = 600,
                   Sqft = 1100,
                   Amenity = "",
-                  CreatedDate = DateTime.Now
+                  CreatedDate = new DateTime(2024, 07, 29)
               });
         }
     }
