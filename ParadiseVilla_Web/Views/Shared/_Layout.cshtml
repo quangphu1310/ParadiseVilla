@@ -27,25 +27,35 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Villa" asp-action="Index">Villa</a>
-                        </li> 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="VillaNumber" asp-action="Index">VillaNumber</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Content Management
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Villa" asp-action="Index">Villa</a></li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="" asp-controller="VillaNumber" asp-action="Index">Villa Number</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                            </ul>
                         </li>
-                        @if(Context.Session.GetString(SD.SessionToken) != null)
+                        
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (Context.Session.GetString(SD.SessionToken) != null &&
+                        Context.Session.GetString(SD.SessionToken).ToString().Length > 0)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="User" asp-action="logout">Logout</a>
+                                <a class="nav-link" asp-controller="User" asp-action="Logout">Logout</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="User" asp-action="login">Login</a>
+                                <a class="nav-link" asp-controller="User" asp-action="Login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="User" asp-action="register">Register</a>
+                                <a class="nav-link" asp-controller="User" asp-action="Register">Register</a>
                             </li>
                         }
                     </ul>

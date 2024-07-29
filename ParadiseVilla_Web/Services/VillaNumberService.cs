@@ -62,7 +62,7 @@ namespace ParadiseVilla_Web.Services
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.PUT,
-                Url = villaUrl + "/api/{SD.CurrentAPIVersion}/VillaNumberAPI/" + obj.VillaNo,
+                Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaNumberAPI/" + obj.VillaNo,
                 Data = obj,
                 Token = token
             }) ;
