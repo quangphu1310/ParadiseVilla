@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using ParadiseVilla_Utility;
 using ParadiseVilla_Web.Models;
@@ -54,6 +55,12 @@ namespace ParadiseVilla_Web.Controllers
         }
         public ActionResult Register()
         {
+            var RoleList = new List<SelectListItem>()
+            {
+                new SelectListItem{Text = SD.Role_Admin, Value = SD.Role_Admin},
+                new SelectListItem{Text=SD.Role_Customer, Value = SD.Role_Customer }
+            };
+            ViewBag.RoleList = RoleList;
             return View();
         }
         [HttpPost]
