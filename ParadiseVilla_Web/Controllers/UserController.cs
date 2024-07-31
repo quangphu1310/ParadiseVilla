@@ -18,10 +18,12 @@ namespace ParadiseVilla_Web.Controllers
     {
         private readonly IAuthService _authService;
         private IMapper _mapper;
-        public UserController(IAuthService authService, IMapper mapper)
+        private readonly ITokenProvider _tokenProvider;
+        public UserController(IAuthService authService, IMapper mapper, ITokenProvider tokenProvider)
         {
             _authService = authService;
             _mapper = mapper;
+            _tokenProvider = tokenProvider;
         }
         public ActionResult Login() 
         {
@@ -46,7 +48,7 @@ namespace ParadiseVilla_Web.Controllers
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                HttpContext.Session.SetString(SD.AccessToken, login.AccessToken);
+                _tokenProvider.SetToken(login);
                 return RedirectToAction("Index", "Home");
             }
             ModelState.AddModelError("CustomError", response.Errors.FirstOrDefault());
@@ -88,7 +90,8 @@ namespace ParadiseVilla_Web.Controllers
         {
             await HttpContext.SignOutAsync();
             //HttpContext.Session.SetString(SD.AccessToken, "");
-            HttpContext.Session.Clear();
+            //HttpContext.Session.Clear();
+            _tokenProvider.ClearToken();
             return RedirectToAction("Index", "Home");
         }
         public IActionResult AccessDenied()
