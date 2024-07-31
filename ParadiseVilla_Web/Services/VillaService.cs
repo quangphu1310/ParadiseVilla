@@ -22,7 +22,8 @@ namespace ParadiseVilla_Web.Services
                 ApiType = SD.ApiType.POST,
                 Data = obj,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaAPI",
-                Token = token
+                Token = token,
+                ContentType = SD.ContentType.MultipartFormData
             });
         }
 
@@ -63,7 +64,8 @@ namespace ParadiseVilla_Web.Services
                 ApiType = SD.ApiType.PUT,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaAPI/" + obj.Id,
                 Data = obj,
-                Token = token
+                Token = token,
+                ContentType = SD.ContentType.MultipartFormData
             }) ;
         }
     }

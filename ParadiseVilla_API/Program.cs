@@ -18,10 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
-    options.CacheProfiles.Add("Default30", new CacheProfile
-    {
-        Duration = 30
-    });
+    //options.CacheProfiles.Add("Default30", new CacheProfile
+    //{
+    //    Duration = 30
+    //});
     //options.ReturnHttpNotAcceptable = true;
 }).AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -126,11 +126,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(o =>
     {
-        o.SwaggerEndpoint("/swagger/v1/swagger.json", "Paradise_Villa_V1");
         o.SwaggerEndpoint("/swagger/v2/swagger.json", "Paradise_Villa_V2");
+        o.SwaggerEndpoint("/swagger/v1/swagger.json", "Paradise_Villa_V1");
     });
     //app.UseSwaggerUI();
 }
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

@@ -25,4 +25,8 @@
     <ProjectReference Include="..\ParadiseVilla_Utility\ParadiseVilla_Utility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwRoot\VillaImage\" />
+  </ItemGroup>
+
 </Project>
