@@ -45,7 +45,7 @@ namespace ParadiseVilla_API.Repository
             {
                 return new TokenDTO()
                 {
-                    Token = ""
+                    AccessToken = ""
                 };
             }
             //if user was found generate JWT Token
@@ -67,7 +67,7 @@ namespace ParadiseVilla_API.Repository
             var token = tokenHandler.CreateToken(tokenDescriptor);
             TokenDTO tokenDTO = new TokenDTO()
             {
-                Token = tokenHandler.WriteToken(token)
+                AccessToken = tokenHandler.WriteToken(token)
             };
             return tokenDTO;
         }

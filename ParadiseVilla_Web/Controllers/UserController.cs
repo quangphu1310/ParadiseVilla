@@ -38,7 +38,7 @@ namespace ParadiseVilla_Web.Controllers
                 TokenDTO login = JsonConvert.DeserializeObject<TokenDTO>(Convert.ToString(response.Result));
             //Lấy giá trị từ sub trong token
                 var handler = new JwtSecurityTokenHandler();
-                var jwt = handler.ReadJwtToken(login.Token);
+                var jwt = handler.ReadJwtToken(login.AccessToken);
 
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                 identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(x=>x.Type== "unique_name").Value));
@@ -46,7 +46,7 @@ namespace ParadiseVilla_Web.Controllers
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                HttpContext.Session.SetString(SD.AccessToken, login.Token);
+                HttpContext.Session.SetString(SD.AccessToken, login.AccessToken);
                 return RedirectToAction("Index", "Home");
             }
             ModelState.AddModelError("CustomError", response.Errors.FirstOrDefault());
