@@ -35,7 +35,7 @@ namespace ParadiseVilla_Web.Controllers
             APIResponse response = await _authService.LoginAsync<APIResponse>(obj);
             if(response != null && response.IsSuccess)
             {
-                LoginResponseDTO login = JsonConvert.DeserializeObject<LoginResponseDTO>(Convert.ToString(response.Result));
+                TokenDTO login = JsonConvert.DeserializeObject<TokenDTO>(Convert.ToString(response.Result));
             //Lấy giá trị từ sub trong token
                 var handler = new JwtSecurityTokenHandler();
                 var jwt = handler.ReadJwtToken(login.Token);

@@ -50,6 +50,7 @@ namespace ParadiseVilla_Web.Controllers
             }
             return View(model);
         }
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateVilla(int id)
         {
             var response = await _villaService.GetAsync<APIResponse>(id, HttpContext.Session.GetString(SD.AccessToken));

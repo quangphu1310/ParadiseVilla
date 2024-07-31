@@ -36,17 +36,16 @@ namespace ParadiseVilla_API.Repository
             return true;
         }
 
-        public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
+        public async Task<TokenDTO> Login(LoginRequestDTO loginRequestDTO)
         {
             var user = _db.ApplicationUsers.FirstOrDefault(x => x.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
             
             var isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
             if (user == null || !isValid)
             {
-                return new LoginResponseDTO()
+                return new TokenDTO()
                 {
-                    Token = "",
-                    User = null
+                    Token = ""
                 };
             }
             //if user was found generate JWT Token
@@ -66,12 +65,11 @@ namespace ParadiseVilla_API.Repository
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
+            TokenDTO tokenDTO = new TokenDTO()
             {
-                Token = tokenHandler.WriteToken(token),
-                User = _mapper.Map<UserDTO>(user),
+                Token = tokenHandler.WriteToken(token)
             };
-            return loginResponseDTO;
+            return tokenDTO;
         }
 
         public async Task<UserDTO> Register(RegisterationRequestDTO registerationRequestDTO)

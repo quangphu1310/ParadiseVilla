@@ -24,8 +24,8 @@ namespace ParadiseVilla_API.Controllers.v1
 
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest)
         {
-            var loginResponse = await _userRepository.Login(loginRequest);
-            if (loginResponse.User == null || string.IsNullOrEmpty(loginResponse.Token))
+            var tokenDTO = await _userRepository.Login(loginRequest);
+            if (tokenDTO == null || string.IsNullOrEmpty(tokenDTO.Token))
             {
                 _apiResponse.IsSuccess = false;
                 _apiResponse.Errors.Add("Username or password isn't correct!");
@@ -34,7 +34,7 @@ namespace ParadiseVilla_API.Controllers.v1
             }
             _apiResponse.IsSuccess = true;
             _apiResponse.StatusCode = HttpStatusCode.OK;
-            _apiResponse.Result = loginResponse;
+            _apiResponse.Result = tokenDTO;
             return Ok(_apiResponse);
         }
         [HttpPost("register")]
