@@ -25,7 +25,7 @@ namespace ParadiseVilla_Web.Controllers
         public async Task<IActionResult> Index()
         {
             List<VillaNumberDTO> list = null;
-            var response = await _villaNumberService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.AccessToken));
+            var response = await _villaNumberService.GetAllAsync<APIResponse>();
             if(response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<VillaNumberDTO>>(Convert.ToString(response.Result));
@@ -35,7 +35,7 @@ namespace ParadiseVilla_Web.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create() {
             VillaNumberCreateVM villaNumberVM = new();
-            var response = await _villaService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.AccessToken));
+            var response = await _villaService.GetAllAsync<APIResponse>();
             if (response != null && response.IsSuccess)
             {
                 villaNumberVM.VillaList = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result))
@@ -53,7 +53,7 @@ namespace ParadiseVilla_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _villaNumberService.CreateAsync<APIResponse>(villaNumber.VillaNumberCreateDTO, HttpContext.Session.GetString(SD.AccessToken));
+                var response = await _villaNumberService.CreateAsync<APIResponse>(villaNumber.VillaNumberCreateDTO);
                 if (response != null && response.IsSuccess)
                 {
                     TempData["success"] = $"Create {villaNumber.VillaNumberCreateDTO.VillaNo} successfully!";
@@ -67,7 +67,7 @@ namespace ParadiseVilla_Web.Controllers
                     }
                 }
             }
-            var resp = await _villaService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.AccessToken));
+            var resp = await _villaService.GetAllAsync<APIResponse>();
             if (resp != null && resp.IsSuccess)
             {
                 villaNumber.VillaList = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(resp.Result))
@@ -84,8 +84,8 @@ namespace ParadiseVilla_Web.Controllers
         public async Task<IActionResult> Update(int id)
         {
             VillaNumberUpdateVM villaNumberVM = new();
-            var response = await _villaService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.AccessToken));
-            var responseVillaNumber = await _villaNumberService.GetAsync<APIResponse>(id, HttpContext.Session.GetString(SD.AccessToken));
+            var response = await _villaService.GetAllAsync<APIResponse>();
+            var responseVillaNumber = await _villaNumberService.GetAsync<APIResponse>(id);
             if (response != null && response.IsSuccess && responseVillaNumber != null)
             {
                 villaNumberVM.VillaList = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result))
@@ -105,7 +105,7 @@ namespace ParadiseVilla_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _villaNumberService.UpdateAsync<APIResponse>(villaNumber.VillaNumberUpdateDTO, HttpContext.Session.GetString(SD.AccessToken));
+                var response = await _villaNumberService.UpdateAsync<APIResponse>(villaNumber.VillaNumberUpdateDTO);
                 if (response != null && response.IsSuccess)
                 {
                     TempData["success"] = $"Update {villaNumber.VillaNumberUpdateDTO.VillaNo} successfully!";
@@ -119,8 +119,8 @@ namespace ParadiseVilla_Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             VillaNumberDeleteVM villaNumberVM = new();
-            var response = await _villaService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.AccessToken));
-            var responseVillaNumber = await _villaNumberService.GetAsync<APIResponse>(id, HttpContext.Session.GetString(SD.AccessToken));
+            var response = await _villaService.GetAllAsync<APIResponse>();
+            var responseVillaNumber = await _villaNumberService.GetAsync<APIResponse>(id);
             if (response != null && response.IsSuccess && responseVillaNumber != null)
             {
                 villaNumberVM.VillaList = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result))
@@ -141,7 +141,7 @@ namespace ParadiseVilla_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _villaNumberService.DeleteAsync<APIResponse>(villaNumber.VillaNumberDTO.VillaNo, HttpContext.Session.GetString(SD.AccessToken));
+                var response = await _villaNumberService.DeleteAsync<APIResponse>(villaNumber.VillaNumberDTO.VillaNo);
                 if (response != null && response.IsSuccess)
                 {
                     TempData["success"] = $"Delete {villaNumber.VillaNumberDTO.VillaNo} successfully!";

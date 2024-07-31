@@ -16,55 +16,50 @@ namespace ParadiseVilla_Web.Services
             villaUrl = configuration.GetValue<string>("ServiceUrls:VillaAPI");
         }
 
-        public async Task<T> CreateAsync<T>(VillaNumberCreateDTO obj, string token)
+        public async Task<T> CreateAsync<T>(VillaNumberCreateDTO obj)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = obj,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaNumberAPI",
-                Token = token
             });
         }
 
-        public async Task<T> DeleteAsync<T>(int id, string token)
+        public async Task<T> DeleteAsync<T>(int id)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.DELETE,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaNumberAPI/" + id,
-                Token = token
             });
         }
 
-        public async Task<T> GetAllAsync<T>(string token)
+        public async Task<T> GetAllAsync<T>()
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaNumberAPI/",
-                Token = token
             });
         }
 
-        public async Task<T> GetAsync<T>(int id, string token)
+        public async Task<T> GetAsync<T>(int id)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaNumberAPI/" + id,
-                Token = token
             }) ;
         }
 
-        public async Task<T> UpdateAsync<T>(VillaNumberUpdateDTO obj, string token)
+        public async Task<T> UpdateAsync<T>(VillaNumberUpdateDTO obj)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.PUT,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaNumberAPI/" + obj.VillaNo,
                 Data = obj,
-                Token = token
             }) ;
         }
     }

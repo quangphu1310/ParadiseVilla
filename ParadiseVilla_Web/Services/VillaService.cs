@@ -15,56 +15,51 @@ namespace ParadiseVilla_Web.Services
             villaUrl = configuration.GetValue<string>("ServiceUrls:VillaAPI");
         }
 
-        public async Task<T> CreateAsync<T>(VillaCreateDTO obj, string token)
+        public async Task<T> CreateAsync<T>(VillaCreateDTO obj)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = obj,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaAPI",
-                Token = token,
                 ContentType = SD.ContentType.MultipartFormData
             });
         }
 
-        public async Task<T> DeleteAsync<T>(int id, string token)
+        public async Task<T> DeleteAsync<T>(int id)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.DELETE,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaAPI/" + id,
-                Token = token
             });
         }
 
-        public async Task<T> GetAllAsync<T>(string token)
+        public async Task<T> GetAllAsync<T>()
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaAPI/",
-                Token = token
             });
         }
 
-        public async Task<T> GetAsync<T>(int id, string token)
+        public async Task<T> GetAsync<T>(int id)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaAPI/" + id,
-                Token = token
             }) ;
         }
 
-        public async Task<T> UpdateAsync<T>(VillaUpdateDTO obj, string token)
+        public async Task<T> UpdateAsync<T>(VillaUpdateDTO obj)
         {
             return await SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.PUT,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaAPI/" + obj.Id,
                 Data = obj,
-                Token = token,
                 ContentType = SD.ContentType.MultipartFormData
             }) ;
         }
