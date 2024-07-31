@@ -26,7 +26,7 @@ namespace ParadiseVilla_Web.Services
                 ApiType = SD.ApiType.POST,
                 Data = loginRequest,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/UserAuth/login"
-            });
+            }, withBearer:false);
         }
 
         public async Task<T> RegisterAsync<T>(RegisterationRequestDTO registeration)
@@ -36,7 +36,7 @@ namespace ParadiseVilla_Web.Services
                 ApiType = SD.ApiType.POST,
                 Data = registeration,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/UserAuth/register"
-            });
+            }, withBearer:false);
         }
     }
 }

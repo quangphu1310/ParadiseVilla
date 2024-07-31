@@ -14,14 +14,14 @@ namespace ParadiseVilla_Web.Services
         public APIResponse reponseModel { get; set; }
         public IHttpClientFactory httpClient {  get; set; } 
         private readonly ITokenProvider _tokenProvider;
-        public BaseService(IHttpClientFactory httpClient, TokenProvider tokenProvider)
+        public BaseService(IHttpClientFactory httpClient, ITokenProvider tokenProvider)
         {
             reponseModel = new APIResponse();
             this.httpClient = httpClient;
             this._tokenProvider = tokenProvider;
         }
 
-        public async Task<T> SendAsync<T>(APIRequest apiRequest)
+        public async Task<T> SendAsync<T>(APIRequest apiRequest, bool withBearer)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace ParadiseVilla_Web.Services
                 }
                 message.RequestUri = new Uri(apiRequest.Url);
 
-                if (_tokenProvider.GetToken() != null)
+                if (withBearer && _tokenProvider.GetToken() != null)
                 {
                     var token = _tokenProvider.GetToken();
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
