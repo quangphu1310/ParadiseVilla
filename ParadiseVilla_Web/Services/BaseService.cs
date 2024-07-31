@@ -13,10 +13,12 @@ namespace ParadiseVilla_Web.Services
     {
         public APIResponse reponseModel { get; set; }
         public IHttpClientFactory httpClient {  get; set; } 
-        public BaseService(IHttpClientFactory httpClient)
+        private readonly ITokenProvider _tokenProvider;
+        public BaseService(IHttpClientFactory httpClient, TokenProvider tokenProvider)
         {
             reponseModel = new APIResponse();
             this.httpClient = httpClient;
+            this._tokenProvider = tokenProvider;
         }
 
         public async Task<T> SendAsync<T>(APIRequest apiRequest)
@@ -34,7 +36,13 @@ namespace ParadiseVilla_Web.Services
                 }
                 message.RequestUri = new Uri(apiRequest.Url);
 
-                if(apiRequest.ContentType == SD.ContentType.MultipartFormData)
+                if (_tokenProvider.GetToken() != null)
+                {
+                    var token = _tokenProvider.GetToken();
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+                }
+
+                if (apiRequest.ContentType == SD.ContentType.MultipartFormData)
                 {
                     //
                     var content = new MultipartFormDataContent();

@@ -6,19 +6,22 @@ using ParadiseVilla_Web.Services.IServices;
 
 namespace ParadiseVilla_Web.Services
 {
-    public class VillaNumberService : BaseService, IVillaNumberService
+    public class VillaNumberService :  IVillaNumberService
     {
         private IHttpClientFactory _httpClientFactory;
         private string villaUrl;
-        public VillaNumberService(IHttpClientFactory httpClient, IConfiguration configuration) : base(httpClient)
+        private readonly IBaseService _baseService;
+
+        public VillaNumberService(IHttpClientFactory httpClient, IConfiguration configuration, IBaseService baseService)
         {
             _httpClientFactory = httpClient;
             villaUrl = configuration.GetValue<string>("ServiceUrls:VillaAPI");
+            _baseService = baseService;
         }
 
         public async Task<T> CreateAsync<T>(VillaNumberCreateDTO obj)
         {
-            return await SendAsync<T>(new APIRequest()
+            return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = obj,
@@ -28,7 +31,7 @@ namespace ParadiseVilla_Web.Services
 
         public async Task<T> DeleteAsync<T>(int id)
         {
-            return await SendAsync<T>(new APIRequest()
+            return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.DELETE,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaNumberAPI/" + id,
@@ -37,7 +40,7 @@ namespace ParadiseVilla_Web.Services
 
         public async Task<T> GetAllAsync<T>()
         {
-            return await SendAsync<T>(new APIRequest()
+            return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaNumberAPI/",
@@ -46,7 +49,7 @@ namespace ParadiseVilla_Web.Services
 
         public async Task<T> GetAsync<T>(int id)
         {
-            return await SendAsync<T>(new APIRequest()
+            return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaNumberAPI/" + id,
@@ -55,7 +58,7 @@ namespace ParadiseVilla_Web.Services
 
         public async Task<T> UpdateAsync<T>(VillaNumberUpdateDTO obj)
         {
-            return await SendAsync<T>(new APIRequest()
+            return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.PUT,
                 Url = villaUrl + $"/api/{SD.CurrentAPIVersion}/VillaNumberAPI/" + obj.VillaNo,

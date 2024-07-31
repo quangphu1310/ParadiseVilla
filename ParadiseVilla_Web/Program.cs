@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
+builder.Services.AddScoped<IBaseService, BaseService>();
+
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 
 builder.Services.AddHttpClient<IVillaService, VillaService>();

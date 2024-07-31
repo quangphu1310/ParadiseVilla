@@ -6,19 +6,22 @@ using ParadiseVilla_Web.Services.IServices;
 
 namespace ParadiseVilla_Web.Services
 {
-    public class AuthService : BaseService, IAuthService
+    public class AuthService : IAuthService
     {
         private IHttpClientFactory _httpClientFactory;
         private string villaUrl;
-        public AuthService(IHttpClientFactory httpClient, IConfiguration configuration) : base(httpClient)
+        private readonly IBaseService _baseService;
+
+        public AuthService(IHttpClientFactory httpClient, IConfiguration configuration, IBaseService baseService)
         {
             _httpClientFactory = httpClient;
             villaUrl = configuration.GetValue<string>("ServiceUrls:VillaAPI");
+            _baseService = baseService;
         }
 
         public async Task<T> LoginAsync<T>(LoginRequestDTO loginRequest)
         {
-            return await SendAsync<T>(new APIRequest()
+            return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = loginRequest,
@@ -28,7 +31,7 @@ namespace ParadiseVilla_Web.Services
 
         public async Task<T> RegisterAsync<T>(RegisterationRequestDTO registeration)
         {
-            return await SendAsync<T>(new APIRequest()
+            return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = registeration,
