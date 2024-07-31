@@ -46,7 +46,7 @@ namespace ParadiseVilla_Web.Controllers
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                HttpContext.Session.SetString(SD.SessionToken, login.Token);
+                HttpContext.Session.SetString(SD.AccessToken, login.Token);
                 return RedirectToAction("Index", "Home");
             }
             ModelState.AddModelError("CustomError", response.Errors.FirstOrDefault());
@@ -87,7 +87,7 @@ namespace ParadiseVilla_Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            //HttpContext.Session.SetString(SD.SessionToken, "");
+            //HttpContext.Session.SetString(SD.AccessToken, "");
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
