@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using ParadiseVilla_API.Data;
 using ParadiseVilla_API.Models;
@@ -10,6 +12,7 @@ using ParadiseVilla_Utility;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace ParadiseVilla_API.Repository
 {
@@ -49,9 +52,12 @@ namespace ParadiseVilla_API.Repository
                 };
             }
             //if user was found generate JWT Token
+            var jwtTokenId = $"JTI{new Guid()}";
+            var accessToken = await GetAccessToken(user, jwtTokenId);
+
             TokenDTO tokenDTO = new TokenDTO()
             {
-                AccessToken = await GetAccessToken(user)
+                AccessToken = accessToken
             };
             return tokenDTO;
         }
@@ -90,7 +96,7 @@ namespace ParadiseVilla_API.Repository
             return new UserDTO();
         }
 
-        public async Task<string> GetAccessToken(ApplicationUser user)
+        public async Task<string> GetAccessToken(ApplicationUser user, string jwtTokenId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secretKey);
@@ -100,7 +106,9 @@ namespace ParadiseVilla_API.Repository
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Role, roles.FirstOrDefault())
+                    new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
+                    new Claim(JwtRegisteredClaimNames.Jti, jwtTokenId),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -108,6 +116,29 @@ namespace ParadiseVilla_API.Repository
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public Task<TokenDTO> RefreshAccessToken(TokenDTO tokenDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        private (bool isSuccess, string userId, string jwtTokenId) GetAccessTokenData(string accessToken)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwt = tokenHandler.ReadJwtToken(accessToken);
+
+                var jwtTokenId = jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Jti).Value;
+                var userId = jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value;
+
+                return (true, userId, jwtTokenId); 
+            }
+            catch
+            {
+                return (false, null, null);
+            }
         }
     }
     
