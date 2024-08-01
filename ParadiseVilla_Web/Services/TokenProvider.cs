@@ -24,7 +24,7 @@ namespace ParadiseVilla_Web.Services
                 bool hasAccessToken = _contextAccessor.HttpContext.Request.Cookies.TryGetValue(SD.AccessToken, out string accessToken);
                 TokenDTO tokenDTO = new TokenDTO()
                 {
-                    AccessToken = accessToken
+                    AccessToken = accessToken,
                 };
                 return hasAccessToken ? tokenDTO : null;
             }

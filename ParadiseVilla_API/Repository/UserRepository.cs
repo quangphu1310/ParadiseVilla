@@ -54,10 +54,12 @@ namespace ParadiseVilla_API.Repository
             //if user was found generate JWT Token
             var jwtTokenId = $"JTI{new Guid()}";
             var accessToken = await GetAccessToken(user, jwtTokenId);
+            var refreshToken = await CreateNewRefreshToken(user.Id, jwtTokenId);
 
             TokenDTO tokenDTO = new TokenDTO()
             {
-                AccessToken = accessToken
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
             };
             return tokenDTO;
         }
@@ -110,7 +112,7 @@ namespace ParadiseVilla_API.Repository
                     new Claim(JwtRegisteredClaimNames.Jti, jwtTokenId),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Id)
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddMinutes(60),
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -121,6 +123,20 @@ namespace ParadiseVilla_API.Repository
         public Task<TokenDTO> RefreshAccessToken(TokenDTO tokenDTO)
         {
             throw new NotImplementedException();
+        }
+        private async Task<string> CreateNewRefreshToken(string userId, string jwtTokenId)
+        {
+            RefreshToken refreshToken = new()
+            {
+                JwtTokenId = jwtTokenId,
+                UserId = userId,
+                IsValid = true,
+                ExpiresAt = DateTime.UtcNow.AddDays(30),
+                Refresh_Token = new Guid() + "-" + new Guid()
+            };
+            await _db.RefreshTokens.AddAsync(refreshToken);
+            await _db.SaveChangesAsync();
+            return refreshToken.Refresh_Token;
         }
 
         private (bool isSuccess, string userId, string jwtTokenId) GetAccessTokenData(string accessToken)
