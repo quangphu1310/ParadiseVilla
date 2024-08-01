@@ -75,7 +75,7 @@ namespace ParadiseVilla_API.Controllers.v1
                 }
                 _apiResponse.IsSuccess = true;
                 _apiResponse.StatusCode = HttpStatusCode.OK;
-                _apiResponse.Result = tokenDTO;
+                _apiResponse.Result = tokenDTOResponse;
                 return Ok(_apiResponse);
             }
             _apiResponse.IsSuccess = false;
