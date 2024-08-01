@@ -52,7 +52,7 @@ namespace ParadiseVilla_API.Repository
                 };
             }
             //if user was found generate JWT Token
-            var jwtTokenId = $"JTI{new Guid()}";
+            var jwtTokenId = $"JTI{Guid.NewGuid()}";
             var accessToken = await GetAccessToken(user, jwtTokenId);
             var refreshToken = await CreateNewRefreshToken(user.Id, jwtTokenId);
 
@@ -122,7 +122,21 @@ namespace ParadiseVilla_API.Repository
 
         public Task<TokenDTO> RefreshAccessToken(TokenDTO tokenDTO)
         {
-            throw new NotImplementedException();
+            // Find an existing refresh token
+
+
+            // Compare data from existing refresh and access token provided and if there is any missmatch then consider it as a fraud
+
+            // When someone tries to use not valid refresh token, fraud possible
+
+            // If just expired then mark as invalid and return empty
+
+            // replace old refresh with a new one with updated expire date
+
+            // revoke existing refresh token
+
+            // generate new access token
+            return null;
         }
         private async Task<string> CreateNewRefreshToken(string userId, string jwtTokenId)
         {
@@ -132,7 +146,7 @@ namespace ParadiseVilla_API.Repository
                 UserId = userId,
                 IsValid = true,
                 ExpiresAt = DateTime.UtcNow.AddDays(30),
-                Refresh_Token = new Guid() + "-" + new Guid()
+                Refresh_Token = Guid.NewGuid() + "-" + Guid.NewGuid(),
             };
             await _db.RefreshTokens.AddAsync(refreshToken);
             await _db.SaveChangesAsync();
