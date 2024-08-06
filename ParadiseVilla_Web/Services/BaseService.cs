@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using ParadiseVilla_Utility;
 using ParadiseVilla_Web.Models;
+using ParadiseVilla_Web.Models.DTO;
 using ParadiseVilla_Web.Services.IServices;
 using System.Net;
 using System.Net.Http.Headers;
@@ -94,11 +95,7 @@ namespace ParadiseVilla_Web.Services
                 };
 
                 HttpResponseMessage apiResponse = null;
-                if (!string.IsNullOrEmpty(apiRequest.Token))
-                {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiRequest.Token);
-                }
-                apiResponse = await client.SendAsync(messageFactory());
+                apiResponse = await SendWithRefreshTokenAsync(client, messageFactory, withBearer);
                 var apiContent = await apiResponse.Content.ReadAsStringAsync();
                 try
                 {
@@ -132,6 +129,41 @@ namespace ParadiseVilla_Web.Services
                 var APIResponse = JsonConvert.DeserializeObject<T>(res);
                 return APIResponse;
             }
+        }
+        private async Task<HttpResponseMessage> SendWithRefreshTokenAsync(HttpClient httpClient,
+            Func<HttpRequestMessage> httpRequestMessageFactory, bool withBearer = true)
+        {
+
+            if (!withBearer)
+            {
+                return await httpClient.SendAsync(httpRequestMessageFactory());
+            }
+            else
+            {
+                TokenDTO tokenDTO = _tokenProvider.GetToken();
+                if (tokenDTO != null && !string.IsNullOrEmpty(tokenDTO.AccessToken))
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenDTO.AccessToken);
+                }
+
+                try
+                {
+                    var response = await httpClient.SendAsync(httpRequestMessageFactory());
+                    if (response.IsSuccessStatusCode)
+                        return response;
+
+                    // IF this fails then we can pass refresh token!
+
+                    return response;
+
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
+            }
+
+
         }
     }
 }
