@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Authentication;
+using Newtonsoft.Json;
 using ParadiseVilla_Utility;
 using ParadiseVilla_Web.Models;
 using ParadiseVilla_Web.Models.DTO;
@@ -14,12 +15,17 @@ namespace ParadiseVilla_Web.Services
     {
         public APIResponse reponseModel { get; set; }
         public IHttpClientFactory httpClient {  get; set; } 
-        private readonly ITokenProvider _tokenProvider;
-        public BaseService(IHttpClientFactory httpClient, ITokenProvider tokenProvider)
+        private readonly ITokenProvider _tokenProvider; 
+        protected readonly string VillaApiUrl;
+        private IHttpContextAccessor _httpContextAccessor;
+        public BaseService(IHttpClientFactory httpClient, ITokenProvider tokenProvider,
+            IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
             reponseModel = new APIResponse();
             this.httpClient = httpClient;
             this._tokenProvider = tokenProvider;
+            _httpContextAccessor = httpContextAccessor;
+            VillaApiUrl = configuration.GetValue<string>("ServiceUrls:VillaAPI");
         }
 
         public async Task<T> SendAsync<T>(APIRequest apiRequest, bool withBearer)
@@ -164,6 +170,41 @@ namespace ParadiseVilla_Web.Services
             }
 
 
+        }
+
+        private async Task InvokeRefreshTokenEndpoint(HttpClient httpClient, string existingAccessToken, string existingRefreshToken)
+        {
+            HttpRequestMessage message = new();
+            message.Headers.Add("Accept", "application/json");
+            message.RequestUri = new Uri($"{VillaApiUrl}/api/{SD.CurrentAPIVersion}/UsersAuth/refresh");
+            message.Method = HttpMethod.Post;
+            message.Content = new StringContent(JsonConvert.SerializeObject(new TokenDTO()
+            {
+                AccessToken = existingAccessToken,
+                RefreshToken = existingRefreshToken
+            }), Encoding.UTF8, "application/json");
+
+            var response = await httpClient.SendAsync(message);
+            var content = await response.Content.ReadAsStringAsync();
+            var apiResponse = JsonConvert.DeserializeObject<APIResponse>(content);
+
+            if (apiResponse?.IsSuccess != null)
+            {
+                await _httpContextAccessor.HttpContext.SignOutAsync();
+                _tokenProvider.ClearToken();
+            }
+            else
+            {
+                var tokenDataStr = JsonConvert.SerializeObject(apiResponse.Result);
+                var tokenDto = JsonConvert.DeserializeObject<TokenDTO>(tokenDataStr);
+
+                if (tokenDto != null && !string.IsNullOrEmpty(tokenDto.AccessToken))
+                {
+                    //New method to sign in with the new token that we receive
+
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenDto.AccessToken);
+                }
+            }
         }
     }
 }
