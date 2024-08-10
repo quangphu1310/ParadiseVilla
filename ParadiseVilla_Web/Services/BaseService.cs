@@ -136,7 +136,6 @@ namespace ParadiseVilla_Web.Services
         private async Task<HttpResponseMessage> SendWithRefreshTokenAsync(HttpClient httpClient,
             Func<HttpRequestMessage> httpRequestMessageFactory, bool withBearer = true)
         {
-
             if (!withBearer)
             {
                 return await httpClient.SendAsync(httpRequestMessageFactory());
@@ -178,8 +177,6 @@ namespace ParadiseVilla_Web.Services
                     throw;
                 }
             }
-
-
         }
 
         private async Task InvokeRefreshTokenEndpoint(HttpClient httpClient, string existingAccessToken, string existingRefreshToken)
@@ -230,5 +227,7 @@ namespace ParadiseVilla_Web.Services
 
             _tokenProvider.SetToken(tokenDTO);
         }
+
+
     }
 }
