@@ -97,29 +97,44 @@ namespace ParadiseVilla_Web.Services
                     return message;
                 };
 
-                HttpResponseMessage apiResponse = null;
-                apiResponse = await SendWithRefreshTokenAsync(client, messageFactory, withBearer);
-                var apiContent = await apiResponse.Content.ReadAsStringAsync();
+                HttpResponseMessage httpResponseMessage = null;
+                httpResponseMessage = await SendWithRefreshTokenAsync(client, messageFactory, withBearer);
+                APIResponse FinalApiResponse = new()
+                {
+                    IsSuccess = false
+                };
                 try
                 {
-                    APIResponse ApiResponse = JsonConvert.DeserializeObject<APIResponse>(apiContent);
-                    if(apiResponse.StatusCode == HttpStatusCode.BadRequest || apiResponse.StatusCode == HttpStatusCode.NotFound)
+                    switch (httpResponseMessage.StatusCode)
                     {
-                        ApiResponse.StatusCode = HttpStatusCode.BadRequest;
-                        ApiResponse.IsSuccess = false;
-                        var res = JsonConvert.SerializeObject(ApiResponse);
-                        var returnObj = JsonConvert.DeserializeObject<T>(res);
-                        return returnObj;
+                        case HttpStatusCode.NotFound:
+                            FinalApiResponse.Errors = new List<string>() { "Not Found" };
+                            break;
+                        case HttpStatusCode.Forbidden:
+                            FinalApiResponse.Errors = new List<string>() { "Access Denied" };
+                            break;
+                        case HttpStatusCode.Unauthorized:
+                            FinalApiResponse.Errors = new List<string>() { "Unauthorized" };
+                            break;
+                        case HttpStatusCode.InternalServerError:
+                            FinalApiResponse.Errors = new List<string>() { "Internal Server Error" };
+                            break;
+                        default:
+                            var apiContent = await httpResponseMessage.Content.ReadAsStringAsync();
+                            FinalApiResponse.IsSuccess = true;
+                            FinalApiResponse = JsonConvert.DeserializeObject<APIResponse>(apiContent);
+                            break;
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    var exceptionResponse = JsonConvert.DeserializeObject<T>(apiContent);
-                    return exceptionResponse;
+                    FinalApiResponse.Errors = new List<string>() { "Error Encountered", ex.Message.ToString() };
                 }
-                var APIResponse = JsonConvert.DeserializeObject<T>(apiContent);
-                return APIResponse;
+                var res = JsonConvert.SerializeObject(FinalApiResponse);
+                var returnObj = JsonConvert.DeserializeObject<T>(res);
+                return returnObj;
+
             }
             catch (Exception e)
             {
