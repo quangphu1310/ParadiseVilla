@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using ParadiseVilla_Web;
+using ParadiseVilla_Web.Extentions;
 using ParadiseVilla_Web.Services;
 using ParadiseVilla_Web.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(u => u.Filters.Add(new AuthExceptionRedirection()));
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 builder.Services.AddScoped<IBaseService, BaseService>();
